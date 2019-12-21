@@ -66,6 +66,22 @@ MyString::MyString(size_t n, char c)
 	}
 	this->_p[int(n)] = NULL;
 }
+MyString::MyString(iterator first, iterator last)
+{
+	this->_length = 0;
+	for (iterator des = first; des != last; des++)
+	{
+		this->_length++;
+	}
+	this->_capacity = this->_length;
+	this->_p = new char[this->_length+1];
+	for (int i = 0; i < this->_length; i++)
+	{
+		_p[i] = *first.getm_Ptr();
+		first++;
+	}
+	_p[this->_length] = NULL;
+}
 
 MyString::~MyString()
 {
@@ -88,6 +104,42 @@ MyString& MyString::operator=(char c)
 {
 	return *this;
 }
+
+
+//ITERATORS
+MyString::iterator MyString::begin()
+{
+	return iterator(&this->_p[0]);
+}
+MyString::iterator MyString::end()
+{
+	return iterator(&this->_p[strlen(this->_p)]);
+}
+MyString::const_iterator MyString::cbegin()
+{
+	return const_iterator(&this->_p[0]);
+}
+MyString::const_iterator MyString::cend()
+{
+	return const_iterator(&this->_p[strlen(this->_p)]);
+}
+MyString::reverse_iterator MyString::rbegin()
+{
+	return reverse_iterator(&this->_p[strlen(this->_p) - 1]);
+}
+MyString::reverse_iterator MyString::rend()
+{
+	return reverse_iterator(&this->_p[-1]);
+}
+MyString::const_reverse_iterator MyString::crbegin()
+{
+	return const_reverse_iterator(&this->_p[strlen(this->_p) - 1]);
+}
+MyString::const_reverse_iterator MyString::crend()
+{
+	return const_reverse_iterator(&this->_p[-1]);
+}
+
 
 //CAPACITY
 size_t MyString::size() const
@@ -344,7 +396,7 @@ MyString& MyString::append(const MyString& str, size_t subpos, size_t sublen)
 	{
 		if (subpos > str.size())
 		{
-			throw  (4);
+			throw  (2);
 		}
 		else {
 			if (subpos + sublen < sublen)
@@ -389,7 +441,7 @@ MyString& MyString::append(const char* str, size_t n)
 	{
 		if (n > strlen(str))
 		{
-			throw  (4);
+			throw  (2);
 		}
 		else {
 			for (size_t i = 0; i < n; i++)
@@ -411,7 +463,7 @@ MyString& MyString::append(size_t n, char c)
 	{
 		if (strlen(this->_p) + n < n)
 		{
-			throw  (4);
+			throw  (2);
 		}
 		else {
 			for (size_t i = 0; i < n; i++)
@@ -426,6 +478,25 @@ MyString& MyString::append(size_t n, char c)
 		cout << "Error out of range: " << error << ": error in (append) function." << endl;
 		exit(-1073740791);
 	}
+}
+MyString& MyString::append(iterator first, iterator last)
+{
+	this->_length = 0;
+	for (iterator des = first; des != last; des++)
+	{
+		this->_length++;
+	}
+	this->_capacity = this->_length;
+	char* strTemp = new char[this->_length + 1];
+	for (int i = 0; i < this->_length; i++)
+	{
+		strTemp[i] = *first.getm_Ptr();
+		first++;
+	}
+	strTemp[this->_length] = NULL;
+	MyString temp(strTemp);
+	*this += temp;
+	return *this;
 }
 
 void MyString::push_back(char c) 
@@ -462,14 +533,33 @@ MyString& MyString::assign(size_t n, char c)
 	*this = str;
 	return *this;
 }
+MyString& MyString::assign(iterator first, iterator last)
+{
+	this->_length = 0;
+	for (iterator des = first; des != last; des++)
+	{
+		this->_length++;
+	}
+	this->_capacity = this->_length;
+	char* strTemp = new char[this->_length + 1];
+	for (int i = 0; i < this->_length; i++)
+	{
+		strTemp[i] = *first.getm_Ptr();
+		first++;
+	}
+	strTemp[this->_length] = NULL;
+	MyString temp(strTemp);
+	*this = temp;
+	return *this;
+}
 
 MyString& MyString::insert(size_t pos, const MyString& str) 
 {
 	try
 	{
-		if (pos > strlen(this->_p))
+		if (int(pos) > strlen(this->_p))
 		{
-			throw  (5);
+			throw  (3);
 		}
 		else 
 		{
@@ -490,13 +580,13 @@ MyString& MyString::insert(size_t pos, const MyString& str, size_t subpos, size_
 {
 	try
 	{
-		if (pos > strlen(this->_p))
+		if (int(pos) > strlen(this->_p))
 		{
-			throw  (5);
+			throw  (3);
 		}
-		else if (subpos > strlen(str._p))
+		else if (int(subpos) > strlen(str._p))
 		{
-			throw  (6);
+			throw  (4);
 		}
 		else 
 		{
@@ -509,12 +599,12 @@ MyString& MyString::insert(size_t pos, const MyString& str, size_t subpos, size_
 	}
 	catch (int error)
 	{
-		if (error == 5)
+		if (error == 3)
 		{
 			cout << "Error out of range: " << error << ": error in (insert) function." << endl;
 			exit(-1073740791);
 		}
-		else if (error == 6)
+		else if (error == 4)
 		{
 			cout << "Error of length: " << error << ": error in (insert) function." << endl;
 			exit(-1073740791);
@@ -525,9 +615,9 @@ MyString& MyString::insert(size_t pos, const char* s)
 {
 	try
 	{
-		if (pos > strlen(this->_p))
+		if (int(pos) > strlen(this->_p))
 		{
-			throw  (5);
+			throw  (3);
 		}
 		else
 		{
@@ -548,13 +638,13 @@ MyString& MyString::insert(size_t pos, const char* s, size_t n)
 {
 	try
 	{
-		if (pos > strlen(this->_p))
+		if (int(pos) > strlen(this->_p))
 		{
-			throw  (8);
+			throw  (3);
 		}
 		else if (n > strlen(s))
 		{
-			throw  (9);
+			throw  (4);
 		}
 		else
 		{
@@ -583,9 +673,9 @@ MyString& MyString::insert(size_t pos, size_t n, char c)
 {
 	try
 	{
-		if (pos > strlen(this->_p))
+		if (int(pos) > strlen(this->_p))
 		{
-			throw  (5);
+			throw  (3);
 		}
 		else
 		{
@@ -602,64 +692,181 @@ MyString& MyString::insert(size_t pos, size_t n, char c)
 		exit(-1073740791);
 	}
 }
+void MyString::insert(iterator p, size_t n, char c)
+{
+	int vt = 0, pos = 0;
+	for (iterator des = this->begin(); des != this->end(); des++)
+	{
+		if (des == p)
+		{
+			pos = vt;
+		}
+		vt++;
+	}
+	MyString str1(this->_p, 0, pos);
+	MyString str2(n, c);
+	MyString str3(*this, pos, strlen(this->_p) - pos);
+	*this = str1 + str3 + str2;
+}
+MyString::iterator MyString::insert(iterator p, char c)
+{
+	int vt = 0, pos = 0;
+	for (iterator des = this->begin(); des != this->end(); des++)
+	{
+		if (des == p)
+		{
+			pos = vt;
+		}
+		vt++;
+	}
+	MyString str1(this->_p, 0, pos);
+	MyString str2(1, c);
+	MyString str3(*this, pos, strlen(this->_p) - pos);
+	*this = str1 + str2 + str3;
+	return iterator(this->_p);
+}
+void MyString::insert(iterator p, iterator first, iterator last)
+{
+	int vt = 0;
+	int pos = 0, l, subpos = 0, sublen = 0;
+	for (iterator des = this->begin(); des != this->end(); des++)
+	{
+		if (des == p)
+		{
+			pos = vt;
+		}
+		if (des == first)
+		{
+			subpos = vt;
+		}
+		if (des == last)
+		{
+			sublen = vt;
+		}
+		vt++;
+	}
+	this->_length = 0;
+	for (iterator des = first; des != last; des++)
+	{
+		this->_length++;
+	}
+	this->_capacity = this->_length;
+	char* strTemp = new char[this->_length + 1];
+	for (int i = 0; i < this->_length; i++)
+	{
+		strTemp[i] = *first.getm_Ptr();
+		first++;
+	}
+	strTemp[this->_length] = NULL;
+	MyString temp(strTemp);
+	this->insert(pos, temp, subpos, sublen - subpos);
+}
 
 MyString& MyString::erase(size_t pos, size_t len)
 {
 	char* strTemp;
 	if (int(len) >= 0)
 	{
-		int l = 0;
+		int size = 0;
 		strTemp = new char[strlen(this->_p)];
 		for (int i = 0; i < strlen(this->_p); i++)
 		{
 			if (i < pos || i >= pos + len)
 			{
-				strTemp[l] = this->_p[i];
-				l++;
+				strTemp[size++] = this->_p[i];
 			}
 		}
 
-		this->_p = new char[l + 1];
-		for (int i = 0; i < l; i++)
+		this->_p = new char[size + 1];
+		for (int i = 0; i < size; i++)
 		{
 			this->_p[i] = strTemp[i];
 		}
-		this->_p[l] = NULL;
+		this->_p[size] = NULL;
 		delete[] strTemp;
 		return *this;
 	}
 	else
 	{
-		int l = 0;
+		int size = 0;
 		strTemp = new char[strlen(this->_p) + 1];
 		for (int i = 0; i < strlen(this->_p); i++)
 		{
 			if (i < pos)
 			{
-				strTemp[l] = this->_p[i];
-				l++;
+				strTemp[size++] = this->_p[i];
 			}
 		}
 
-		this->_p = new char[l + 1];
-		for (int i = 0; i < l; i++)
+		this->_p = new char[size + 1];
+		for (int i = 0; i < size; i++)
 		{
 			this->_p[i] = strTemp[i];
 		}
-		this->_p[l] = NULL;
+		this->_p[size] = NULL;
 
 		delete[] strTemp;
 		return *this;
 	}
+}
+MyString::iterator MyString::erase(iterator p)
+{
+	int vt = 0;
+	for (iterator des = this->begin(); des != this->end(); des++)
+	{
+		if (des == p)
+		{
+			break;
+		}
+		vt++;
+	}
+	char* strTemp;
+	int size = 0;
+	strTemp = new char[strlen(this->_p)];
+	for (int i = 0; i < strlen(this->_p); i++)
+	{
+		if (i != vt)
+		{
+			strTemp[size++] = this->_p[i];
+		}
+	}
+
+	this->_p = new char[size + 1];
+	for (int i = 0; i < size; i++)
+	{
+		this->_p[i] = strTemp[i];
+	}
+	this->_p[size] = NULL;
+	delete[] strTemp;
+	return iterator(this->_p);
+}
+MyString::iterator MyString::erase(iterator first, iterator last)
+{
+	int vt = 0;
+	int pos = 0, len = 0;
+	for (iterator des = this->begin(); des != this->end(); des++)
+	{
+		if (des == first)
+		{
+			pos = vt;
+		}
+		if (des == last)
+		{
+			len = vt;
+		}
+		vt++;
+	}
+	this->erase(pos, len - pos);
+	return iterator(this->_p);
 }
 
 MyString& MyString::replace(size_t pos, size_t len, const MyString& str) 
 {
 	try
 	{
-		if (pos > strlen(this->_p))
+		if (int(pos) > strlen(this->_p))
 		{
-			throw  (10);
+			throw  (5);
 		}
 		else
 		{
@@ -687,17 +894,36 @@ MyString& MyString::replace(size_t pos, size_t len, const MyString& str)
 		exit(-1073740791);
 	}
 }
+MyString& MyString::replace(iterator i1, iterator i2, const MyString& str)
+{
+	int vt = 0;
+	int pos = 0, len = 0;
+	for (iterator des = this->begin(); des != this->end(); des++)
+	{
+		if (des == i1)
+		{
+			pos = vt;
+		}
+		if (des == i2)
+		{
+			len = vt;
+		}
+		vt++;
+	}
+	this->replace(pos, len,str);
+	return *this;
+}
 MyString& MyString::replace(size_t pos, size_t len, const MyString& str, size_t subpos, size_t sublen) 
 {
 	try
 	{
-		if (pos > strlen(this->_p))
+		if (int(pos) > strlen(this->_p))
 		{
-			throw  (10);
+			throw  (5);
 		}
 		else if (subpos > strlen(str._p))
 		{
-			throw  (11);
+			throw  (6);
 		}
 		else
 		{
@@ -737,9 +963,9 @@ MyString& MyString::replace(size_t pos, size_t len, const char* s)
 {
 	try
 	{
-		if (pos > strlen(this->_p))
+		if (int(pos) > strlen(this->_p))
 		{
-			throw  (10);
+			throw  (5);
 		}
 		else
 		{
@@ -767,17 +993,37 @@ MyString& MyString::replace(size_t pos, size_t len, const char* s)
 		exit(-1073740791);
 	}
 }
+MyString& MyString::replace(iterator i1, iterator i2, const char* s)
+{
+
+	int vt = 0;
+	int pos = 0, len = 0;
+	for (iterator des = this->begin(); des != this->end(); des++)
+	{
+		if (des == i1)
+		{
+			pos = vt;
+		}
+		if (des == i2)
+		{
+			len = vt;
+		}
+		vt++;
+	}
+	this->replace(pos, len, s);
+	return *this;
+}
 MyString& MyString::replace(size_t pos, size_t len, const char* s, size_t n) 
 {
 	try
 	{
-		if (n > strlen(s))
+		if (int(n) > strlen(s))
 		{
-			throw  (11);
+			throw  (5);
 		}
-		else if (pos > strlen(this->_p))
+		else if (int(pos) > strlen(this->_p))
 		{
-			throw  (10);
+			throw  (6);
 		}
 		else
 		{
@@ -812,13 +1058,32 @@ MyString& MyString::replace(size_t pos, size_t len, const char* s, size_t n)
 		}
 	}
 }
+MyString& MyString::replace(iterator i1, iterator i2, const char* s, size_t n)
+{
+	int vt = 0;
+	int pos = 0, len = 0;
+	for (iterator des = this->begin(); des != this->end(); des++)
+	{
+		if (des == i1)
+		{
+			pos = vt;
+		}
+		if (des == i2)
+		{
+			len = vt;
+		}
+		vt++;
+	}
+	this->replace(pos, len, s, n);
+	return *this;
+}
 MyString& MyString::replace(size_t pos, size_t len, size_t n, char c) {
 
 	try
 	{
-		if (pos > strlen(this->_p))
+		if (int(pos) > strlen(this->_p))
 		{
-			throw  (10);
+			throw  (5);
 		}
 		else
 		{
@@ -844,6 +1109,58 @@ MyString& MyString::replace(size_t pos, size_t len, size_t n, char c) {
 		cout << "Error out of range: " << error << ": error in (replace) function." << endl;
 		exit(-1073740791);
 	}
+}
+MyString& MyString::replace(iterator i1, iterator i2, size_t n, char c)
+{
+	int vt = 0;
+	int pos = 0, len = 0;
+	for (iterator des = this->begin(); des != this->end(); des++)
+	{
+		if (des == i1)
+		{
+			pos = vt;
+		}
+		if (des == i2)
+		{
+			len = vt;
+		}
+		vt++;
+	}
+	this->replace(pos, len, n, c);
+	return *this;
+}
+MyString& MyString::replace(iterator i1, iterator i2, iterator first, iterator last)
+{
+	int vt = 0;
+	int pos = 0, len = 0, subpos = 0, sublen = 0;
+	for (iterator des = this->begin(); des != this->end(); des++)
+	{
+		if (des == i1)
+		{
+			pos = vt;
+		}
+		if (des == i2)
+		{
+			len = vt;
+		}
+		vt++;
+	}
+	this->_length = 0;
+	for (iterator des = first; des != last; des++)
+	{
+		this->_length++;
+	}
+	this->_capacity = this->_length;
+	char* strTemp = new char[this->_length + 1];
+	for (int i = 0; i < this->_length; i++)
+	{
+		strTemp[i] = *first.getm_Ptr();
+		first++;
+	}
+	strTemp[this->_length] = NULL;
+	MyString temp(strTemp);
+	this->replace(pos, len-pos, temp);
+	return *this;
 }
 
 void MyString::swap(MyString& str)
@@ -876,164 +1193,298 @@ allocator<char> MyString::get_allocator() const
 	allocator<char> s;
 	char* strTemp = s.allocate(_length);
 	strcpy(strTemp, _p);
-	strTemp[_length] = '\0';
+	strTemp[_length] = NULL;
 	return s;
 }
 
 size_t MyString::copy(char* s, size_t len, size_t pos) const
 {
-	if (pos > strlen(this->_p)) return 0;
-	if (pos + len > strlen(this->_p)) 
+	try
 	{
-		for (int i = 0; i < strlen(this->_p) - pos; i++) 
+		if (pos > strlen(this->_p))
 		{
-			s[i] = this->_p[pos + i];
+			throw (7);
 		}
-		return strlen(this->_p) - pos;
+		else
+		{
+			if (pos + len > strlen(this->_p))
+			{
+				for (int i = 0; i < strlen(this->_p) - pos; i++)
+				{
+					s[i] = this->_p[pos + i];
+				}
+				return strlen(this->_p) - pos;
+			}
+			else
+			{
+				for (int i = 0; i < len; i++)
+				{
+					s[i] = this->_p[pos + i];
+				}
+				return len;
+			}
+		}
 	}
-	else 
+	catch (int error)
 	{
-		for (int i = 0; i < len; i++)
-		{
-			s[i] = this->_p[pos + i];
-		}
-		return len;
+		cout << "Error out of range: " << error << ": error in (copy) function." << endl;
+		exit(-1073740791);
 	}
 }
 
 size_t MyString::find(const MyString& str, size_t pos) const 
 {
-	for (int i = int(pos); i < strlen(this->_p); i++)
+	try
 	{
-		bool flat = true;
-		for (int j = 0; j < strlen(str._p); j++)
+		if (int(pos) > strlen(this->_p))
 		{
-			if (this->_p[i + j] != str._p[j])
+			throw (8);
+		}
+		else
+		{
+			for (int i = int(pos); i < strlen(this->_p); i++)
 			{
-				flat = false;
+				bool flat = true;
+				for (int j = 0; j < strlen(str._p); j++)
+				{
+					if (this->_p[i + j] != str._p[j])
+					{
+						flat = false;
+					}
+				}
+				if (flat == true)
+				{
+					return size_t(i);
+				}
 			}
 		}
-		if (flat == true)
-		{
-			return size_t(i);
-		}
+	}
+	catch (int error)
+	{
+		cout << "Error out of range: " << error << ": error in (find) function." << endl;
+		exit(-1073740791);
 	}
 }
 size_t MyString::find(const char* s, size_t pos) const 
 {
-	for (int i = int(pos); i < strlen(this->_p); i++)
+	try
 	{
-		bool flat = true;
-		for (int j = 0; j < strlen(s); j++) 
+		if (int(pos) > strlen(this->_p))
 		{
-			if (this->_p[i + j] != s[j]) 
+			throw (8);
+		}
+		else
+		{
+			for (int i = int(pos); i < strlen(this->_p); i++)
 			{
-				flat = false;
+				bool flat = true;
+				for (int j = 0; j < strlen(s); j++)
+				{
+					if (this->_p[i + j] != s[j])
+					{
+						flat = false;
+					}
+				}
+				if (flat == true)
+				{
+					return size_t(i);
+				}
 			}
 		}
-		if (flat == true) 
-		{
-			return size_t(i);
-		}
+	}
+	catch (int error)
+	{
+		cout << "Error out of range: " << error << ": error in (find) function." << endl;
+		exit(-1073740791);
 	}
 }
 size_t MyString::find(const char* s, size_t pos, size_t n) const 
 {
-	for (int i = int(pos); i < strlen(this->_p); i++) 
+	try
 	{
-		bool flat = true;
-		for (int j = 0; j < int(n); j++) 
+		if (int(pos) > strlen(this->_p))
 		{
-			if (this->_p[i + j] != s[j]) flat = false;
+			throw (8);
 		}
-		if (flat == true) 
+		else
 		{
-			return size_t(i);
+			for (int i = int(pos); i < strlen(this->_p); i++)
+			{
+				bool flat = true;
+				for (int j = 0; j < int(n); j++)
+				{
+					if (this->_p[i + j] != s[j]) flat = false;
+				}
+				if (flat == true)
+				{
+					return size_t(i);
+				}
+			}
 		}
+	}
+	catch (int error)
+	{
+		cout << "Error out of range: " << error << ": error in (find) function." << endl;
+		exit(-1073740791);
 	}
 }
 size_t MyString::find(char c, size_t pos) const 
 {
-	for (int i = int(pos); i < strlen(this->_p); i++) 
+	try
 	{
-		if (this->_p[i] == c) 
+		if (int(pos) > strlen(this->_p))
 		{
-			return size_t(i);
+			throw (8);
 		}
+		else
+		{
+			for (int i = int(pos); i < strlen(this->_p); i++)
+			{
+				if (this->_p[i] == c)
+				{
+					return size_t(i);
+				}
+			}
+		}
+	}
+	catch (int error)
+	{
+		cout << "Error out of range: " << error << ": error in (find) function." << endl;
+		exit(-1073740791);
 	}
 }
 
 size_t MyString::rfind(const MyString& str, size_t pos) const 
 {
-	size_t locate = -1;
-	for (int i = 0; i < strlen(this->_p) - pos; i++) 
+	try
 	{
-		bool flat = true;
-		for (int j = 0; j < strlen(str._p); j++) 
+		if (int(pos) > strlen(this->_p))
 		{
-			if (this->_p[i + j] != str._p[j]) 
-			{
-				flat = false;
-			}
+			throw (9);
 		}
-		if (flat == true) 
+		else
 		{
-			locate = i;
+			size_t locate = -1;
+			for (int i = 0; i < strlen(this->_p) - pos; i++)
+			{
+				bool flat = true;
+				for (int j = 0; j < strlen(str._p); j++)
+				{
+					if (this->_p[i + j] != str._p[j])
+					{
+						flat = false;
+					}
+				}
+				if (flat == true)
+				{
+					locate = i;
+				}
+			}
+			return locate;
 		}
 	}
-	return locate;
+	catch (int error)
+	{
+		cout << "Error out of range: " << error << ": error in (rfind) function." << endl;
+		exit(-1073740791);
+	}
 }
 size_t MyString::rfind(const char* s, size_t pos) const 
 {
-	size_t locate = -1;
-	for (int i = 0; i < strlen(this->_p) - pos; i++)
+	try
 	{
-		bool flat = true;
-		for (int j = 0; j < strlen(s); j++) 
+		if (int(pos) > strlen(this->_p))
 		{
-			if (this->_p[i + j] != s[j])
-			{
-				flat = false;
-			}
+			throw (9);
 		}
-		if (flat == true) 
+		else
 		{
-			locate = i;
+			size_t locate = -1;
+			for (int i = 0; i < strlen(this->_p) - pos; i++)
+			{
+				bool flat = true;
+				for (int j = 0; j < strlen(s); j++)
+				{
+					if (this->_p[i + j] != s[j])
+					{
+						flat = false;
+					}
+				}
+				if (flat == true)
+				{
+					locate = i;
+				}
+			}
+			return locate;
 		}
 	}
-	return locate;
+	catch (int error)
+	{
+		cout << "Error out of range: " << error << ": error in (rfind) function." << endl;
+		exit(-1073740791);
+	}
 }
 size_t MyString::rfind(const char* s, size_t pos, size_t n) const
 {
-	size_t locate = -1;
-	for (int i = 0; i < strlen(this->_p) - pos; i++)
+	try
 	{
-		bool flat = true;
-		for (int j = 0; j < int(n); j++) 
+		if (int(pos) > strlen(this->_p))
 		{
-			if (this->_p[i + j] != s[j]) 
-			{
-				flat = false;
-			}
+			throw (9);
 		}
-		if (flat == true) 
+		else
 		{
-			locate = i;
+			size_t locate = -1;
+			for (int i = 0; i < strlen(this->_p) - pos; i++)
+			{
+				bool flat = true;
+				for (int j = 0; j < int(n); j++)
+				{
+					if (this->_p[i + j] != s[j])
+					{
+						flat = false;
+					}
+				}
+				if (flat == true)
+				{
+					locate = i;
+				}
+			}
+			return locate;
 		}
 	}
-	return locate;
+	catch (int error)
+	{
+		cout << "Error out of range: " << error << ": error in (rfind) function." << endl;
+		exit(-1073740791);
+	}
 }
 size_t MyString::rfind(char c, size_t pos) const 
 {
-	size_t locate = -1;
-	for (int i = 0; i < strlen(this->_p) - pos; i++) 
+	try
 	{
-		if (this->_p[i] == c) 
+		if (int(pos) > strlen(this->_p))
 		{
-			locate = i;
+			throw (9);
+		}
+		else
+		{
+			size_t locate = -1;
+			for (int i = 0; i < strlen(this->_p) - pos; i++)
+			{
+				if (this->_p[i] == c)
+				{
+					locate = i;
+				}
+			}
+			return locate;
 		}
 	}
-	return locate;
+	catch (int error)
+	{
+		cout << "Error out of range: " << error << ": error in (rfind) function." << endl;
+		exit(-1073740791);
+	}
 }
 
 MyString MyString::substr(size_t pos, size_t len) const
@@ -1042,7 +1493,7 @@ MyString MyString::substr(size_t pos, size_t len) const
 	{
 		if (pos > strlen(this->_p))
 		{
-			throw (13);
+			throw (10);
 		}
 		else
 		{
@@ -1078,6 +1529,313 @@ MyString MyString::substr(size_t pos, size_t len) const
 	}
 }
 
+size_t MyString::find_first_of(const MyString& str, size_t pos) const
+{
+	try
+	{
+		if (int(pos) > strlen(this->_p))
+		{
+			throw (11);
+		}
+		else
+		{
+			for (int i = int(pos); i < strlen(this->_p); i++)
+			{
+				for (int j = 0; j < strlen(str._p); j++)
+				{
+					if (this->_p[i] == str._p[j])
+					{
+						return i;
+					}
+				}
+			}
+			return npos;
+		}
+	}
+	catch (int error)
+	{
+		cout << "Error out of range: " << error << ": error in (find_first_of) function." << endl;
+		exit(-1073740791);
+	}
+}
+size_t MyString::find_first_of(const char* s, size_t pos) const
+{
+	try
+	{
+		if (int(pos) > strlen(this->_p))
+		{
+			throw (11);
+		}
+		else
+		{
+			for (int i = int(pos); i < strlen(this->_p); i++)
+			{
+				for (int j = 0; j < strlen(s); j++)
+				{
+					if (_p[i] == s[j]) return i;
+				}
+			}
+			return npos;
+		}
+	}
+	catch (int error)
+	{
+		cout << "Error out of range: " << error << ": error in (find_first_of) function." << endl;
+		exit(-1073740791);
+	}
+}
+size_t MyString::find_first_of(const char* s, size_t pos, size_t n)
+{
+	try
+	{
+		if (int(pos) > strlen(this->_p))
+		{
+			throw (11);
+		}
+		else
+		{
+			for (int i = pos; i < strlen(this->_p); i++)
+			{
+				for (int j = 0; j < int(n); j++)
+				{
+					if (this->_p[i] == s[j]) return i;
+				}
+			}
+			return npos;
+		}
+	}
+	catch (int error)
+	{
+		cout << "Error out of range: " << error << ": error in (find_first_of) function." << endl;
+		exit(-1073740791);
+	}
+}
+size_t MyString::find_first_of(char c, size_t pos) const
+{
+	try
+	{
+		if (int(pos) > strlen(this->_p))
+		{
+			throw (11);
+		}
+		else
+		{
+			for (int i = pos; i < strlen(this->_p); i++)
+			{
+				if (this->_p[i] == c) return i;
+			}
+			return npos;
+		}
+	}
+	catch (int error)
+	{
+		cout << "Error out of range: " << error << ": error in (find_first_of) function." << endl;
+		exit(-1073740791);
+	}
+}
+
+size_t MyString::find_last_of(const MyString& s, size_t pos) const
+{
+
+	if (pos >= strlen(this->_p))
+	{
+		pos = strlen(this->_p) - 1;
+	}
+	for (int i = int(pos); i >= 0; i--)
+	{
+		for (int j = 0; j < strlen(this->_p); j++)
+		{
+			if (this->_p[i] == s._p[j]) return i;
+		}
+	}
+	return npos;
+}
+size_t MyString::find_last_of(const char* s, size_t pos) const
+{
+
+	if (pos >= strlen(this->_p))
+	{
+		pos = strlen(this->_p) - 1;
+	}
+	for (int i = int(pos); i >= 0; i--)
+	{
+		for (int j = 0; j < strlen(s); j++)
+		{
+			if (this->_p[i] == s[j]) return i;
+		}
+	}
+	return npos;
+}
+size_t MyString::find_last_of(const char* s, size_t pos, size_t n) const
+{
+	if (pos >= strlen(this->_p))
+	{
+		pos = strlen(this->_p) - 1;
+	}
+	for (int i = int(pos); i >= 0; i--)
+	{
+		for (int j = 0; j < int(n); j++)
+		{
+			if (this->_p[i] == s[j]) return i;
+		}
+	}
+	return npos;
+}
+size_t MyString::find_last_of(char c, size_t pos) const
+{
+	if (pos >= strlen(this->_p))
+	{
+		pos = strlen(this->_p) - 1;
+	}
+	for (int i = int(pos); i < strlen(this->_p); i++)
+	{
+		if (this->_p[i] == c) return i;
+	}
+	return npos;
+}
+
+size_t MyString::find_first_not_of(const MyString& str, size_t pos) const
+{
+	bool flag;
+	for (int i = int(pos); i < strlen(this->_p); i++)
+	{
+		flag = false;
+		for (int j = 0; j < strlen(str._p); j++)
+		{
+			if (this->_p[i] == str._p[j])
+			{
+				flag = true;
+				break;
+			}
+		}
+		if (flag == false) return i;
+	}
+	return npos;
+}
+size_t MyString::find_first_not_of(const char* s, size_t pos) const
+{
+	bool flag;
+	for (int i = int(pos); i < strlen(this->_p); i++)
+	{
+		flag = false;
+		for (int j = 0; j < strlen(s); j++)
+		{
+			if (this->_p[i] == s[j])
+			{
+				flag = true;
+				break;
+			}
+		}
+		if (flag == false)  return i;
+	}
+	return npos;
+}
+size_t MyString::find_first_not_of(const char* s, size_t pos, size_t n) const
+{
+	bool flag;
+	for (int i = pos; i < strlen(this->_p); i++)
+	{
+		flag = false;
+		for (int j = 0; j < int(n); j++)
+		{
+			if (this->_p[i] == s[j])
+			{
+				flag = true;
+				break;
+			}
+		}
+		if (flag == false) return i;
+	}
+	return npos;
+}
+size_t MyString::find_first_not_of(char c, size_t pos) const
+{
+	for (int i = pos; i < strlen(this->_p); i++)
+	{
+		if (this->_p[i] != c) return i;
+	}
+	return npos;
+}
+
+size_t MyString::find_last_not_of(const MyString& str, size_t pos) const
+{
+	if (pos >= strlen(this->_p))
+	{
+		pos = strlen(this->_p) - 1;
+	}
+	bool flag;
+	for (int i = pos; i >= 0; i--)
+	{
+		flag = false;
+		for (int j = 0; j < strlen(str._p); j++)
+		{
+			if (this->_p[i] == str._p[j])
+			{
+				flag = true;
+				break;
+			}
+		}
+		if (flag == false) return i;
+	}
+	return npos;
+}
+size_t MyString::find_last_not_of(const char* s, size_t pos) const
+{
+	if (pos >= strlen(this->_p))
+	{
+		pos = strlen(this->_p) - 1;
+	}
+	bool flag;
+	for (int i = pos; i >= 0; i--)
+	{
+		flag = false;
+		for (int j = 0; j < strlen(s); j++)
+		{
+			if (this->_p[i] == s[j])
+			{
+				flag = true;
+				break;
+			}
+		}
+		if (flag == false) return i;
+	}
+	return -1;
+}
+size_t MyString::find_last_not_of(const char* s, size_t pos, size_t n) const
+{
+	if (pos >= strlen(this->_p))
+	{
+		pos = strlen(this->_p) - 1;
+	}
+	bool flag;
+	for (int i = pos; i >= 0; i--)
+	{
+		flag = false;
+		for (int j = 0; j < int(n); j++)
+		{
+			if (this->_p[i] == s[j])
+			{
+				flag = true;
+				break;
+			}
+		}
+		if (flag == false) return i;
+	}
+	return npos;
+}
+size_t MyString::find_last_not_of(char c, size_t pos) const
+{
+	if (pos >= strlen(this->_p))
+	{
+		pos = strlen(this->_p) - 1;
+	}
+	for (int i = pos; i >= 0; i--)
+	{
+		if (this->_p[i] != c) return i;
+	}
+	return npos;
+}
+
 int MyString::compare(const MyString& str) const 
 {
 	if (this->_length < str._length) 
@@ -1105,7 +1863,7 @@ int MyString::compare(size_t pos, size_t len, const MyString& str) const
 	{
 		if (pos > strlen(this->_p))
 		{
-			throw  (2);
+			throw  (12);
 		}
 		else
 		{
@@ -1142,8 +1900,6 @@ int MyString::compare(size_t pos, size_t len, const char* s, size_t n) const
 	MyString str2(s, n);
 	return str1.compare(str2);
 }
-
-
 
 
 //NON-MEMBER FUNCTION OVERLOADS
@@ -1271,9 +2027,6 @@ MyString operator+ (char lhs, const MyString& rhs)
 	return tmp;
 
 }
-
-
-
 
 bool operator== (const MyString& lhs, const MyString& rhs)
 {
@@ -1440,6 +2193,7 @@ void swap(MyString& x, MyString& y)
 
 istream& operator>>(istream& is, MyString& str)
 {
+	is.clear();
 	delete[] str._p;
 	str.MyString::MyString();
 	char c;
@@ -1447,10 +2201,10 @@ istream& operator>>(istream& is, MyString& str)
 	{
 		if (c != '\n' && c != ' ') break;
 	}
-	str += c;
+	str.push_back(c);
 	while (is.get(c) && c != '\n' && c != ' ')
 	{
-		str += c;
+		str.push_back(c);
 	}
 	return is;
 }
@@ -1465,12 +2219,13 @@ ostream& operator<<(ostream& os, const  MyString& str)
 
 istream& getline(istream& is, MyString& str, char delim)
 {
+	is.clear();
 	delete[] str._p;
 	str.MyString::MyString();
 	char c;
 	while (is.get(c) && c != delim)
 	{
-		str += c;
+		str.push_back(c);
 	}
 	return is;
 }
@@ -1482,7 +2237,7 @@ istream& getline(istream& is, MyString& str)
 	char c;
 	while (is.get(c) && c != '\n')
 	{
-		str += c;
+		str.push_back(c);
 	}
 	return is;
 }
