@@ -90,18 +90,29 @@ MyString::~MyString()
 
 MyString& MyString::operator=(const MyString& str) 
 {
-	if (this->_p != NULL) delete[] this->_p;
+	if (this->_p != NULL)
+	{
+		delete[] this->_p;
+	}
 	this->MyString::MyString(str);
 	return *this;
 }
 MyString& MyString::operator=(const char* s) 
 {
-	if (this->_p != NULL) delete[] this->_p;
+	if (this->_p != NULL)
+	{
+		delete[] this->_p;
+	}
 	this->MyString::MyString(s);
 	return *this;
 }
 MyString& MyString::operator=(char c) 
 {
+	if (this->_p != NULL)
+	{ 
+		delete[] this->_p; 
+	}
+	this->MyString::MyString(1,c);
 	return *this;
 }
 
@@ -1594,7 +1605,7 @@ size_t MyString::find_first_of(const char* s, size_t pos, size_t n)
 		}
 		else
 		{
-			for (int i = pos; i < strlen(this->_p); i++)
+			for (int i = int(pos); i < strlen(this->_p); i++)
 			{
 				for (int j = 0; j < int(n); j++)
 				{
@@ -1620,7 +1631,7 @@ size_t MyString::find_first_of(char c, size_t pos) const
 		}
 		else
 		{
-			for (int i = pos; i < strlen(this->_p); i++)
+			for (int i = int(pos); i < strlen(this->_p); i++)
 			{
 				if (this->_p[i] == c) return i;
 			}
@@ -1733,7 +1744,7 @@ size_t MyString::find_first_not_of(const char* s, size_t pos) const
 size_t MyString::find_first_not_of(const char* s, size_t pos, size_t n) const
 {
 	bool flag;
-	for (int i = pos; i < strlen(this->_p); i++)
+	for (int i = int(pos); i < strlen(this->_p); i++)
 	{
 		flag = false;
 		for (int j = 0; j < int(n); j++)
@@ -1750,7 +1761,7 @@ size_t MyString::find_first_not_of(const char* s, size_t pos, size_t n) const
 }
 size_t MyString::find_first_not_of(char c, size_t pos) const
 {
-	for (int i = pos; i < strlen(this->_p); i++)
+	for (int i = int(pos); i < strlen(this->_p); i++)
 	{
 		if (this->_p[i] != c) return i;
 	}
@@ -1764,7 +1775,7 @@ size_t MyString::find_last_not_of(const MyString& str, size_t pos) const
 		pos = strlen(this->_p) - 1;
 	}
 	bool flag;
-	for (int i = pos; i >= 0; i--)
+	for (int i = int(pos); i >= 0; i--)
 	{
 		flag = false;
 		for (int j = 0; j < strlen(str._p); j++)
@@ -1786,7 +1797,7 @@ size_t MyString::find_last_not_of(const char* s, size_t pos) const
 		pos = strlen(this->_p) - 1;
 	}
 	bool flag;
-	for (int i = pos; i >= 0; i--)
+	for (int i = int(pos); i >= 0; i--)
 	{
 		flag = false;
 		for (int j = 0; j < strlen(s); j++)
@@ -1808,7 +1819,7 @@ size_t MyString::find_last_not_of(const char* s, size_t pos, size_t n) const
 		pos = strlen(this->_p) - 1;
 	}
 	bool flag;
-	for (int i = pos; i >= 0; i--)
+	for (int i = int(pos); i >= 0; i--)
 	{
 		flag = false;
 		for (int j = 0; j < int(n); j++)
@@ -1829,7 +1840,7 @@ size_t MyString::find_last_not_of(char c, size_t pos) const
 	{
 		pos = strlen(this->_p) - 1;
 	}
-	for (int i = pos; i >= 0; i--)
+	for (int i = int(pos); i >= 0; i--)
 	{
 		if (this->_p[i] != c) return i;
 	}
@@ -2193,7 +2204,6 @@ void swap(MyString& x, MyString& y)
 
 istream& operator>>(istream& is, MyString& str)
 {
-	is.clear();
 	delete[] str._p;
 	str.MyString::MyString();
 	char c;
@@ -2231,7 +2241,6 @@ istream& getline(istream& is, MyString& str, char delim)
 }
 istream& getline(istream& is, MyString& str)
 {
-	is.clear();
 	delete[] str._p;
 	str.MyString::MyString();
 	char c;
