@@ -1,9 +1,10 @@
 #include"MyString.h"
+
 int main()
 {
 	cout << "\t\tDAY LA CAC BO TEST EM LAY TU TRANG CPLUSPLUS.COM\n" << endl;
-
-	cout << "\t\tDAY LA TEST KHOI TAO" << endl;
+	cout << "\t\tDay la cac bo test co iterator";
+	cout << "\n\n\t\tDAY LA TEST KHOI TAO" << endl;
 	MyString s0("Initial string");
 	MyString s1;
 	MyString s2(s0);
@@ -17,7 +18,7 @@ int main()
 	std::cout << "\ns4: " << s4 << "\ns5: " << s5 << "\ns6a: " << s6a;
 	std::cout << "\ns6b: " << s6b << "\ns7: " << s7 << '\n';
 
-	cout << "\t\tDAY LA TEST PHUONG THUC INSERT" << endl;
+	cout << "\n\n\t\tDAY LA TEST PHUONG THUC INSERT" << endl;
 	MyString str = "to be question";
 	MyString str2 = "the ";
 	MyString str3 = "or not to be";
@@ -32,7 +33,7 @@ int main()
 	str.insert(it + 2, str3.begin(), str3.begin() + 3); // (or )
 	std::cout << str << '\n';
 
-	cout << "\t\tDAY LA TEST PHUONG THUC REPLACE" << endl;
+	cout << "\n\n\t\tDAY LA TEST PHUONG THUC REPLACE" << endl;
 	MyString base = "this is a test string.";
 	str2 = "n example";
 	str3 = "sample phrase";
@@ -52,7 +53,7 @@ int main()
 	str.replace(str.begin() + 11, str.end(), str4.begin(), str4.end());// "replace is useful."    (6)
 	std::cout << str << '\n';
 
-	cout << "\t\tDAY LA TEST PHUONG THUC ASSIGN" << endl;
+	cout << "\n\n\t\tDAY LA TEST PHUONG THUC ASSIGN" << endl;
 
 	base = "The quick brown fox jumps over a lazy dog.";
 	str.assign(base);
@@ -78,7 +79,7 @@ int main()
 
 	std::cout << str << '\n';
 
-	cout << "\t\tDAY LA TEST PHUONG THUC COMPARE" << endl;
+	cout << "\n\n\t\tDAY LA TEST PHUONG THUC COMPARE" << endl;
 	MyString str1 = "green apple";
 	str2 = "red apple";
 	cout << str1 << endl;
@@ -95,7 +96,7 @@ int main()
 	if (str1.compare(6, 5, str2, 4, 5) == 0)
 		std::cout << "therefore, both are apples\n";
 
-	cout << "\t\tDAY LA TEST TOAN TU OPERATOR + " << endl;
+	cout << "\n\n\t\tDAY LA TEST TOAN TU OPERATOR + " << endl;
 	MyString firstlevel("com");
 	MyString secondlevel("cplusplus");
 	MyString scheme("http://");
@@ -107,7 +108,7 @@ int main()
 
 	std::cout << url << '\n';
 
-	cout << "\t\tDAY LA TEST CAC PHUONG THUC ERASE" << endl;
+	cout << "\n\n\t\tDAY LA TEST CAC PHUONG THUC ERASE" << endl;
 	str = "This is an example sentence.";
 	std::cout << str << '\n';
 	// "This is an example sentence."
@@ -120,7 +121,7 @@ int main()
 	str.erase(str.begin() + 5, str.end() - 9);  //       ^^^^^
 	std::cout << str << '\n';
 
-	cout << "\t\tDAY LA TEST CAC PHUONG THUC XUAT NHAP" << endl;
+	cout << "\n\n\t\tDAY LA TEST CAC PHUONG THUC XUAT NHAP" << endl;
 	cout << "Nhap bang getline: "; getline(cin, str);
 	cout << "Xuat: " << str << endl;
 

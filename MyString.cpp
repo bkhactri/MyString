@@ -168,7 +168,7 @@ size_t MyString::max_size() const
 }
 void MyString::resize(size_t n)
 {
-	if (n <= _length)
+	if (int(n) < _length)
 	{
 		this->_p[n] = NULL;
 	}
@@ -179,8 +179,9 @@ void MyString::resize(size_t n)
 		{
 			str[i] = _p[i];
 		}
+		this->~MyString();
 		_p = new char[n + 1];
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < int(n); i++)
 		{
 			if (i < _length) 
 			{
@@ -196,7 +197,7 @@ void MyString::resize(size_t n)
 }
 void MyString::resize(size_t n, char c)
 {
-	if (n <= _length)
+	if (int(n) <= _length)
 	{
 		this->_p[n] = NULL;
 	}
@@ -207,8 +208,9 @@ void MyString::resize(size_t n, char c)
 		{
 			str[i] = _p[i];
 		}
+		this->~MyString();
 		_p = new char[n + 1];
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < int(n); i++)
 		{
 			if (i < _length)
 			{
@@ -258,12 +260,13 @@ bool MyString::empty() const
 void MyString::shrink_to_fit()
 {
 	int size = _capacity = _length = this->size();
-	char* s = new char[size];
+	char* s = new char[size + 1];
 	for (int i = 0; i < size; i++)
 	{
 		s[i] = _p[i];
 	}
-	_p = new char[size];
+	s[size] = NULL;
+	_p = new char[size + 1];
 	for (int i = 0; i < size; i++)
 	{
 		_p[i] = s[i];

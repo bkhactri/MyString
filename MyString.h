@@ -128,32 +128,32 @@ public: //String operations
 
 	size_t copy(char* s, size_t len, size_t pos = npos) const;
 
-	size_t find(const MyString& str, size_t pos = npos) const;
-	size_t find(const char* s, size_t pos = npos) const;
+	size_t find(const MyString& str, size_t pos = 0) const;
+	size_t find(const char* s, size_t pos =  0) const;
 	size_t find(const char* s, size_t pos, size_t n) const;
-	size_t find(char c, size_t pos = npos) const;
+	size_t find(char c, size_t pos = 0) const;
 
-	size_t rfind(const MyString& str, size_t pos = npos) const;
-	size_t rfind(const char* s, size_t pos = npos) const;
+	size_t rfind(const MyString& str, size_t pos = 0) const;
+	size_t rfind(const char* s, size_t pos = 0) const;
 	size_t rfind(const char* s, size_t pos, size_t n) const;
-	size_t rfind(char c, size_t pos = npos) const;
+	size_t rfind(char c, size_t pos = 0) const;
 
 	MyString substr(size_t pos = npos, size_t len = npos) const;
 
-	size_t find_first_of(const MyString& b, size_t pos = npos) const;
-	size_t find_first_of(const char* s, size_t pos = npos) const;
+	size_t find_first_of(const MyString& b, size_t pos = 0) const;
+	size_t find_first_of(const char* s, size_t pos = 0) const;
 	size_t find_first_of(const char* s, size_t pos, size_t n);
-	size_t find_first_of(char c, size_t pos = npos) const;
+	size_t find_first_of(char c, size_t pos = 0) const;
 
 	size_t find_last_of(const MyString& str, size_t pos = npos) const;
 	size_t find_last_of(const char* s, size_t pos = npos) const;
 	size_t find_last_of(const char* s, size_t pos, size_t n) const;
 	size_t find_last_of(char c, size_t pos = npos) const;
 
-	size_t find_first_not_of(const MyString& str, size_t pos = npos) const;
-	size_t find_first_not_of(const char* s, size_t pos = npos) const;
+	size_t find_first_not_of(const MyString& str, size_t pos = 0) const;
+	size_t find_first_not_of(const char* s, size_t pos = 0) const;
 	size_t find_first_not_of(const char* s, size_t pos, size_t n) const;
-	size_t find_first_not_of(char c, size_t pos = npos) const;
+	size_t find_first_not_of(char c, size_t pos = 0) const;
 
 	size_t find_last_not_of(const MyString& str, size_t pos = npos) const;
 	size_t find_last_not_of(const char* s, size_t pos = npos) const;
